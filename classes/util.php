@@ -14,13 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+/**
+ * Utility class for enrol_gapplya plugin.
+ *
+ * @package    enrol_gapplya
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace enrol_gapplya;
 
 /**
  * Utility class for enrol_gapplya plugin.
  *
  * @package    enrol_gapplya
- * @copyright  2024 Your Name <your@email.com>
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class util {

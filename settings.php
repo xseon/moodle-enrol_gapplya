@@ -33,10 +33,6 @@ if (!class_exists('enrol_gapplya_admin_setting_migrate')) {
 
     /**
      * Custom admin setting class to handle data migration from the old plugin.
-     *
-     * @package    enrol_gapplya
-     * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
-     * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
     class enrol_gapplya_admin_setting_migrate extends admin_setting_configcheckbox {
 
@@ -81,9 +77,13 @@ if (!class_exists('enrol_gapplya_admin_setting_migrate')) {
                     $courseswithapps = $DB->get_records_sql($sql);
 
                     if ($courseswithapps) {
+                        $courseids = array_keys($courseswithapps);
+                        $courses = $DB->get_records_list('course', 'id', $courseids);
+
                         foreach ($courseswithapps as $course) {
                             $courseid = $course->courseid;
-                            $courserecord = $DB->get_record('course', ['id' => $courseid]);
+
+                            $courserecord = isset($courses[$courseid]) ? $courses[$courseid] : false;
 
                             if (!$courserecord) {
                                 continue;
@@ -134,15 +134,12 @@ if (!class_exists('enrol_gapplya_admin_setting_migrate')) {
 
                             if ($instance) {
                                 // Link applications to the new instance ID.
-                                $updatesql = "UPDATE {enrol_gapplya}
-                                                 SET instance = :newid
-                                               WHERE courseid = :courseid
-                                                 AND instance != :newid2";
-                                $DB->execute($updatesql, [
-                                    'newid' => $instance->id,
+                                $select = "courseid = :courseid AND instance != :newid2";
+                                $params = [
                                     'courseid' => $courseid,
-                                    'newid2' => $instance->id,
-                                ]);
+                                    'newid2'   => $instance->id,
+                                ];
+                                $DB->set_field_select('enrol_gapplya', 'instance', $instance->id, $select, $params);
 
                                 $linkedapps++;
 

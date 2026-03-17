@@ -18,7 +18,7 @@
  * A bulk operation for the enrol_gapplya plugin to assign group for selected users.
  *
  * @package enrol_gapplya
- * @copyright 2024 Sokunthearith Makara
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,7 +27,7 @@
  * A bulk operation for the enrol_gapplya plugin to assign group for selected users.
  *
  * @package enrol_gapplya
- * @copyright 2024 Sokunthearith Makara
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_gapplya_groupselectedusers_operation extends enrol_bulk_enrolment_operation {

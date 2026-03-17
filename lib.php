@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Enrol plugin class for enrol_gapplya.
+ * Library of functions and constants for the enrol_gapplya plugin.
  *
  * @package    enrol_gapplya
  * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
@@ -23,8 +23,9 @@
  */
 
 /**
- * Enrol plugin class for enrol_gapplya.
+ * Enrolment plugin class for enrol_gapplya.
  *
+ * @package    enrol_gapplya
  * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -94,6 +95,17 @@ class enrol_gapplya_plugin extends enrol_plugin {
      * @return bool
      */
     public function allow_manage($instance) {
+        return true;
+    }
+
+    /**
+     * Determines if the plugin should show an "Enrol me" link.
+     * This is strictly required for the Mobile App Web Services to list this method.
+     *
+     * @param stdClass $instance
+     * @return bool
+     */
+    public function show_enrolme_link(stdClass $instance) {
         return true;
     }
 

@@ -1,7 +1,27 @@
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-import $ from "jquery";
+/**
+ * @module     enrol_gapplya/previewfile
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+ import $ from "jquery";
 import Notification from 'core/notification';
 import {add as addToast} from 'core/toast';
+import Ajax from 'core/ajax';
 
 export const init = () => {
     $(document).on('click', "a[data-type]", function() {
@@ -28,7 +48,6 @@ export const init = () => {
                             </div>
                         </div>
                 </div>`;
-        // Remove existing modal
         $("#applyfile").remove();
         $("body").append(modal);
         $("#applyfileLabel").html($(this).text());
@@ -38,27 +57,16 @@ export const init = () => {
             $("#applyfile .modal-body").removeClass("d-flex");
             html = `<img src="${$(this).data("url")}" class="img-fluid mx-auto">`;
         } else if ($(this).data("type").includes("video")) {
-            html = `<video src="${$(this).data("url")}"
-                    class="embed-responsive-item text-center m-0" controls width="100%" autoplay></video>`;
+            html = `<video src="${$(this).data("url")}" class="embed-responsive-item text-center m-0" controls width="100%" autoplay></video>`;
         } else if ($(this).data("type").includes("audio")) {
             $("#applyfile .modal-body").removeClass("d-flex");
-            html = `<audio src="${$(this).data("url")}"
-                    class="embed-responsive-item text-center m-0" controls width="100%" autoplay></audio>`;
+            html = `<audio src="${$(this).data("url")}" class="embed-responsive-item text-center m-0" controls width="100%" autoplay></audio>`;
         } else if ($(this).data("type").includes("pdf")) {
-            html = `<object data="${$(this).data("url")}" type="application/pdf"
-                     width="100%" style="height: 80vh">
-                                            <p>${M.util.get_string('cannotopenpdffile', 'enrol_gapplya', $(this).data("url"))}</p>
-                                            </object>`;
-        } else if ($(this).data("type").includes("officedocument") || $(this).data("type").includes("msword")
-            || $(this).data("type").includes("ms-excel")
-            || $(this).data("type").includes("ms-powerpoint") || $(this).data("type").includes("openxmlformats")) {
-            html = `<iframe id="fileviewer"
-                    src="https://view.officeapps.live.com/op/embed.aspx?src=${$(this).data("url")}"
-                    class="embed-responsive-item" style="width: 100%; height: 80vh"></iframe>`;
+            html = `<object data="${$(this).data("url")}" type="application/pdf" width="100%" style="height: 80vh"><p>${M.util.get_string('cannotopenpdffile', 'enrol_gapplya', $(this).data("url"))}</p></object>`;
+        } else if ($(this).data("type").includes("officedocument") || $(this).data("type").includes("msword") || $(this).data("type").includes("ms-excel") || $(this).data("type").includes("ms-powerpoint") || $(this).data("type").includes("openxmlformats")) {
+            html = `<iframe id="fileviewer" src="https://view.officeapps.live.com/op/embed.aspx?src=${$(this).data("url")}" class="embed-responsive-item" style="width: 100%; height: 80vh"></iframe>`;
         } else if ($(this).data("type").includes("text") || $(this).data("type").includes("csv")) {
-            html = `<iframe id="fileviewer"
-                    src="https://docs.google.com/viewer?url=${$(this).data("url")}&embedded=true"
-                    class="embed-responsive-item" style="width: 100%; height: 80vh; border-radius: 0"></iframe>`;
+            html = `<iframe id="fileviewer" src="https://docs.google.com/viewer?url=${$(this).data("url")}&embedded=true" class="embed-responsive-item" style="width: 100%; height: 80vh; border-radius: 0"></iframe>`;
         } else {
             $("#applyfile .modal-body").removeClass("d-flex");
             html = `<p class="text-center py-5">${M.util.get_string('cannotopenfile', 'enrol_gapplya', $(this).data("url"))}</p>`;
@@ -75,32 +83,22 @@ export const init = () => {
     $(document).on('click', "#withdraw", function(e) {
         e.preventDefault();
         const withdraw = () => {
-            $.ajax({
-                method: "POST",
-                url: M.cfg.wwwroot + "/enrol/gapplya/ajax.php",
-                data: {
-                    action: "withdraw",
-                    id: $(".btn#withdraw").data("instance"),
-                    sesskey: M.cfg.sesskey,
-                },
-                dataType: "text",
-                success: () => {
-                    addToast(M.util.get_string('applicationwithdrawnsuccess', 'enrol_gapplya'), {
-                        type: 'success'
-                    });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
-                },
-                error: () => {
-                    addToast(M.util.get_string('anerroroccurred', 'enrol_gapplya'), {
-                        type: 'danger'
-                    });
+            let request = {
+                methodname: 'enrol_gapplya_withdraw',
+                args: {
+                    instanceid: $(".btn#withdraw").data("instance")
                 }
+            };
+
+            Ajax.call([request])[0].done(function(response) {
+                addToast(M.util.get_string('applicationwithdrawnsuccess', 'enrol_gapplya'), { type: 'success' });
+                setTimeout(() => { location.reload(); }, 1000);
+            }).fail(function(ex) {
+                addToast(M.util.get_string('anerroroccurred', 'enrol_gapplya'), { type: 'danger' });
             });
         };
 
-        try { // 4.1 +
+        try {
             Notification.deleteCancelPromise(
                 M.util.get_string('withdrawapplication', 'enrol_gapplya'),
                 M.util.get_string('withdrawapplicationconfirm', 'enrol_gapplya'),
@@ -110,14 +108,12 @@ export const init = () => {
             }).catch(() => {
                 return;
             });
-        } catch { // 4.1
+        } catch {
             Notification.saveCancel(
                 M.util.get_string('withdrawapplication', 'enrol_gapplya'),
                 M.util.get_string('withdrawapplicationconfirm', 'enrol_gapplya'),
                 M.util.get_string('withdraw', 'enrol_gapplya'),
-                function() {
-                    return withdraw();
-                }
+                function() { return withdraw(); }
             );
         }
     });

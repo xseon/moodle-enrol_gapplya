@@ -18,7 +18,7 @@
  * A bulk operation for the manual enrolment plugin to edit selected users.
  *
  * @package enrol_gapplya
- * @copyright 2018 Farhan Karmali
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,7 +27,7 @@
  * A bulk operation for the manual enrolment plugin to edit selected users.
  *
  * @package enrol_gapplya
- * @copyright 2018 Farhan Karmali
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_gapplya_editselectedusers_operation extends enrol_bulk_enrolment_operation {

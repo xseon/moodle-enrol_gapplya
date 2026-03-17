@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,14 +12,14 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * The form to confirm the intention to bulk delete users enrolments.
+ * Default application form definition.
  *
- * @package enrol_gapplya
- * @copyright 2018 Farhan Karmali
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    enrol_gapplya
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -27,11 +27,11 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->dirroot/enrol/bulkchange_forms.php");
 
 /**
- * The form to confirm the intention to bulk delete users enrolments.
+ * Form to confirm the intention to bulk assign groups to users.
  *
- * @package enrol_gapplya
- * @copyright 2018 Farhan Karmali
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    enrol_gapplya
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_gapplya_deleteselectedusers_form extends enrol_bulk_enrolment_confirm_form {
 }

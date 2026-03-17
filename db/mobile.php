@@ -15,19 +15,27 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Version information for the plugin.
+ * Mobile configuration for the plugin.
  *
  * @package    enrol_gapplya
  * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
- * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'enrol_gapplya';
-$plugin->version   = 2026031700; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->release   = '1.1.0';    // Human-readable version name (History Update).
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->requires  = 2022112800; // Requires Moodle 4.1 or later.
-$plugin->supported = [401, 501]; // Supported Moodle versions.
-
+$addons = [
+    'enrol_gapplya' => [
+        'handlers' => [
+            'enrol_gapplya' => [
+                'delegate' => 'CoreEnrolDelegate',
+                'method' => '\enrol_gapplya\output\mobile::enrol_handler',
+                'options' => [
+                    'enrolmentAction' => 'browser',
+                    'inApp' => true,
+                    'autoLogin' => 'check',
+                ],
+            ],
+        ],
+    ],
+];

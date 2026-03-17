@@ -28,9 +28,6 @@ require_once($CFG->libdir . '/formslib.php');
 
 /**
  * The custom enrolment application form.
- *
- * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
- * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_gapplya_form extends moodleform {
 

@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,24 +12,25 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * A bulk operation for the gapplya enrolment plugin to delete selected users enrolments.
+ * File containing the bulk operation to delete selected users enrolments.
  *
- * @package enrol_gapplya
- * @copyright 2018 Farhan Karmali
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    enrol_gapplya
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * A bulk operation for the gapplya enrolment plugin to delete selected users enrolments.
  *
- * @package enrol_gapplya
- * @copyright 2018 Farhan Karmali
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    enrol_gapplya
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_gapplya_deleteselectedusers_operation extends enrol_bulk_enrolment_operation {
+
     /**
      * Returns the title to display for this bulk operation.
      *
@@ -58,7 +59,7 @@ class enrol_gapplya_deleteselectedusers_operation extends enrol_bulk_enrolment_o
      * @return enrol_gapplya_deleteselectedusers_form
      */
     public function get_form($defaultaction = null, $defaultcustomdata = null) {
-        if (![$defaultcustomdata]) {
+        if (!is_array($defaultcustomdata)) {
             $defaultcustomdata = [];
         }
         $defaultcustomdata['title'] = $this->get_title();
@@ -74,9 +75,9 @@ class enrol_gapplya_deleteselectedusers_operation extends enrol_bulk_enrolment_o
      * @param course_enrolment_manager $manager
      * @param array $users
      * @param stdClass $properties The data returned by the form.
+     * @return bool
      */
     public function process(course_enrolment_manager $manager, array $users, stdClass $properties) {
-        global $DB;
         if (!has_capability("enrol/gapplya:unenrol", $manager->get_context())) {
             return false;
         }

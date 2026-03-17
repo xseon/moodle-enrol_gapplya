@@ -18,7 +18,7 @@
  * The form to collect required information when group users.
  *
  * @package enrol_gapplya
- * @copyright 2024 Sokunthearith Makara
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +30,7 @@ require_once("$CFG->dirroot/enrol/bulkchange_forms.php");
  * The form to collect required information when group users.
  *
  * @package enrol_gapplya
- * @copyright 2024 Sokunthearith Makara
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_gapplya_groupselectedusers_form extends moodleform {

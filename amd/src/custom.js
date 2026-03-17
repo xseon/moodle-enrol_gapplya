@@ -4,11 +4,26 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * @module     enrol_gapplya/custom
+ * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 define([
     "jquery",
     "enrol_gapplya/jszip",
     "core/toast",
+    "core/ajax",
     "enrol_gapplya/jquery.dataTables",
     "enrol_gapplya/dataTables.bootstrap4",
     "enrol_gapplya/dataTables.select",
@@ -19,7 +34,7 @@ define([
     "enrol_gapplya/dataTables.rowGroup",
     "enrol_gapplya/rowGroup.bootstrap4",
     "enrol_gapplya/buttons.colVis"
-], function($, JSZip, toast) {
+], function($, JSZip, toast, Ajax) {
 
     window.JSZip = JSZip;
 
@@ -146,7 +161,7 @@ define([
                         $(row).find('td:first-child').removeClass('select-checkbox');
                     }
                 },
-                dom: "<'d-flex align-items-start justify-content-between'<'d-flex align-items-start'B><'d-flex align-items-center'fl>><'#filterregion.w-100 row'>t<'row'<'col-sm-6'i><'col-sm-6'p>>",
+                dom: "<'d-flex align-items-start justify-content-between'<'d-flex align-items-start'B><'d-flex align-items-center'fl>><'#filterregion.w-100 row mx-0 mt-2'>t<'row'<'col-sm-6'i><'col-sm-6'p>>",
                 stateSave: true,
                 stateLoadParams: function(settings, data) {
                     if (data.columns.length !== $("#gapplytable th").length) return false;
@@ -234,13 +249,13 @@ define([
                 dt.columns().every(function(index) {
                     let header = $(this.header());
                     let isIgnored = header.hasClass("noorder") || header.hasClass("export-only") || header.hasClass("d-none");
-                    
+
                     // Only process currently visible columns, ignoring checkboxes, actions and hidden technical cols.
                     if (this.visible() && !isIgnored) {
                         let text = header.text().trim();
                         if (text !== "") {
                             $(renderFilterBox(index, text)).appendTo("#filterregion");
-                            
+
                             let sortItem = '<a class="dropdown-item" href="javascript:void(0)" data-col="' + index + '">';
                             sortItem += text + "</a>";
                             $("#sortdropdown").append(sortItem);
@@ -331,8 +346,14 @@ define([
                     extraInputs += '<small class="form-text text-muted">' + M.util.get_string("messagehtmlhelp", "enrol_gapplya") + '</small></div>';
                 } else if (action === "approve") {
                     try {
-                        let groups = await $.ajax({ method: "POST", url: M.cfg.wwwroot + "/enrol/gapplya/ajax.php", data: { action: "getgroups", id: $("#gapplytable").data("instance"), sesskey: M.cfg.sesskey }, dataType: "json" });
-                        let roles = await $.ajax({ method: "POST", url: M.cfg.wwwroot + "/enrol/gapplya/ajax.php", data: { action: "getrolesanddates", id: $("#gapplytable").data("instance"), sesskey: M.cfg.sesskey }, dataType: "json" });
+                        let groupsReq = Ajax.call([{ methodname: 'enrol_gapplya_get_groups', args: { instanceid: $("#gapplytable").data("instance") } }])[0];
+                        let rolesReq = Ajax.call([{ methodname: 'enrol_gapplya_get_roles_and_dates', args: { instanceid: $("#gapplytable").data("instance") } }])[0];
+
+                        let groupsStr = await groupsReq;
+                        let rolesStr = await rolesReq;
+
+                        let groups = JSON.parse(groupsStr);
+                        let roles = JSON.parse(rolesStr);
 
                         if (groups.length > 0) {
                             let ghtml = "";
@@ -360,7 +381,7 @@ define([
                 }
 
                 let modal = '<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-hidden="true" style="background: rgba(0,0,0,0.5);"> <div class="modal-dialog modal-dialog-centered" role="document"> <div class="modal-content"> <div class="modal-header"> <h5 class="modal-title flex-grow-1">' + M.util.get_string(action + "applications", "enrol_gapplya") + '</h5> <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal"><i class="fa fa-fw fa-times"></i></button> </div> <div class="modal-body"> <p class="mb-0">' + M.util.get_string("areyousureyouwantto" + action, "enrol_gapplya") + "</p> " + roleoptions + " " + startdate + " " + enddate + " " + groupoptions + extraInputs + notifyHtml + ' </div> <div class="modal-footer"> <button type="button" class="btn btn-secondary text-uppercase font-weight-bold" data-dismiss="modal" data-bs-dismiss="modal">' + M.util.get_string("cancel", "enrol_gapplya") + '</button> <button type="button" class="btn ' + btnClass + ' text-uppercase font-weight-bold" id="proceed">' + M.util.get_string("proceed", "enrol_gapplya") + "</button> </div> </div> </div></div>";
-                
+
                 removeModal("approveModal");
                 $("body").append(modal);
                 showModal("approveModal");
@@ -374,41 +395,37 @@ define([
 
                     hideModal("approveModal");
                     showLoading();
-                    
+
                     let isNotifying = $("#approveModal #notifyusers").length ? ($("#approveModal #notifyusers").is(":checked") ? 1 : 0) : 1;
 
-                    $.ajax({
-                        url: M.cfg.wwwroot + "/enrol/gapplya/ajax.php",
-                        method: "POST",
-                        dataType: "text",
-                        data: {
-                            action: action,
-                            ids: selecteddata.toString(),
-                            id: $("#gapplytable").data("instance"),
-                            groups: $("#approveModal input.groups:checked").map(function() { return this.value; }).get().toString(),
-                            roleid: $("#approveModal select#role").val(),
-                            start: $("#approveModal input#startdate").val() !== "" ? new Date($("#approveModal input#startdate").val()).getTime() / 1000 : 0,
-                            end: $("#approveModal input#enddate").val() !== "" ? new Date($("#approveModal input#enddate").val()).getTime() / 1000 : 0,
-                            notify: isNotifying,
-                            messagetext: msgText,
-                            messagesubject: $("#approveModal #messagesubject").val() || "",
-                            sesskey: M.cfg.sesskey
-                        },
-                        success: function(r) {
-                            if (r.trim() === "success") {
-                                toast.add(M.util.get_string(action + "success", "enrol_gapplya"), { type: "success" });
-                                setTimeout(() => window.location.reload(), 800);
-                            } else {
-                                toast.add(M.util.get_string("anerroroccurred", "enrol_gapplya"), { type: "danger" });
-                            }
-                        },
-                        error: function() {
+                    let requestArgs = {
+                        action: action,
+                        instanceid: $("#gapplytable").data("instance"),
+                        ids: selecteddata.map(Number),
+                        groups: $("#approveModal input.groups:checked").map(function() { return Number(this.value); }).get(),
+                        roleid: Number($("#approveModal select#role").val() || 0),
+                        start: $("#approveModal input#startdate").val() !== "" ? Math.floor(new Date($("#approveModal input#startdate").val()).getTime() / 1000) : 0,
+                        end: $("#approveModal input#enddate").val() !== "" ? Math.floor(new Date($("#approveModal input#enddate").val()).getTime() / 1000) : 0,
+                        notify: isNotifying,
+                        messagetext: msgText,
+                        messagesubject: $("#approveModal #messagesubject").val() || ""
+                    };
+
+                    Ajax.call([{
+                        methodname: 'enrol_gapplya_execute_action',
+                        args: requestArgs
+                    }])[0].done(function(r) {
+                        if (r.trim() === "success") {
+                            toast.add(M.util.get_string(action + "success", "enrol_gapplya"), { type: "success" });
+                            setTimeout(() => window.location.reload(), 800);
+                        } else {
                             toast.add(M.util.get_string("anerroroccurred", "enrol_gapplya"), { type: "danger" });
-                        },
-                        complete: function() {
-                            hideLoading();
-                            table.rows().deselect();
                         }
+                    }).fail(function() {
+                        toast.add(M.util.get_string("anerroroccurred", "enrol_gapplya"), { type: "danger" });
+                    }).always(function() {
+                        hideLoading();
+                        table.rows().deselect();
                     });
                 });
             });
@@ -578,32 +595,39 @@ define([
                             btn.prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i>');
                             sp.html("");
 
+                            let formDataObj = {};
                             let fd = new FormData(document.getElementById("gapplya-edit-form"));
+                            fd.forEach((value, key) => { formDataObj[key] = value; });
 
-                            $.ajax({
-                                url: M.cfg.wwwroot + "/enrol/gapplya/ajax.php",
-                                type: "POST",
-                                data: fd,
-                                processData: false,
-                                contentType: false,
-                                dataType: "text",
-                                success: function(r) {
-                                    if (r && r.indexOf("success") !== -1) {
-                                        sp.html('<span class="text-success">' + M.util.get_string("saved", "enrol_gapplya") + "</span>");
+                            // Checkboxes are tricky in FormData, explicitly add them if they are in the DOM
+                            $("#gapplya-edit-form input[type='checkbox']").each(function() {
+                                formDataObj[$(this).attr('name')] = $(this).is(':checked') ? 'yes' : 'no';
+                            });
 
-                                        setTimeout(function() {
-                                             hideModal("userdetailModal");
-                                             window.location.reload();
-                                        }, 800);
-                                    } else {
-                                        sp.html('<span class="text-danger">' + M.util.get_string("error", "enrol_gapplya") + "</span>");
-                                        btn.prop("disabled", false).html('<i class="fa fa-save"></i> ' + M.util.get_string("savechanges", "enrol_gapplya"));
-                                    }
-                                },
-                                error: function() {
-                                    sp.html('<span class="text-danger">' + M.util.get_string("anerroroccurred", "enrol_gapplya") + "</span>");
+                            let requestArgs = {
+                                instanceid: Number(fd.get("id")),
+                                recordid: Number(fd.get("recordid")),
+                                adminnote: fd.get("adminnote") || "",
+                                formdata: JSON.stringify(formDataObj)
+                            };
+
+                            Ajax.call([{
+                                methodname: 'enrol_gapplya_save_data',
+                                args: requestArgs
+                            }])[0].done(function(r) {
+                                if (r && r.indexOf("success") !== -1) {
+                                    sp.html('<span class="text-success">' + M.util.get_string("saved", "enrol_gapplya") + "</span>");
+                                    setTimeout(function() {
+                                        hideModal("userdetailModal");
+                                        window.location.reload();
+                                    }, 800);
+                                } else {
+                                    sp.html('<span class="text-danger">' + M.util.get_string("error", "enrol_gapplya") + "</span>");
                                     btn.prop("disabled", false).html('<i class="fa fa-save"></i> ' + M.util.get_string("savechanges", "enrol_gapplya"));
                                 }
+                            }).fail(function() {
+                                sp.html('<span class="text-danger">' + M.util.get_string("anerroroccurred", "enrol_gapplya") + "</span>");
+                                btn.prop("disabled", false).html('<i class="fa fa-save"></i> ' + M.util.get_string("savechanges", "enrol_gapplya"));
                             });
                         });
 
