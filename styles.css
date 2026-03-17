@@ -1,0 +1,230 @@
+/* ==========================================================================
+   1. PAGE LAYOUT & TABS
+   ========================================================================== */
+
+/* Push the last tab (Edit/Settings) to the far right */
+#page-enrol-gapplya-manage #page-content .nav-tabs .nav-item:nth-last-child(1) {
+    margin-left: auto;
+}
+
+/* Ensure the link color in the last tab remains black */
+#page-enrol-gapplya-manage #page-content .nav-tabs .nav-item:nth-last-child(1) a {
+    color: #000;
+}
+
+/* ==========================================================================
+   2. DATATABLES CORE OVERRIDES
+   ========================================================================== */
+
+/* Fix alignment of checkbox selection indicators */
+#page-enrol-gapplya-manage table.dataTable > tbody > tr.selected > td.select-checkbox:after,
+table.dataTable > tbody > tr.selected > th.select-checkbox:after {
+    margin-top: -16px;
+}
+
+/* Ensure action buttons has equal width and inside table text is white */
+#page-enrol-gapplya-manage .btn.action-button {
+    color: #fff;
+}
+
+/* Vertical alignment for table cells */
+#page-enrol-gapplya-manage table.dataTable tbody td,
+#page-enrol-gapplya-manage table.dataTable tbody th {
+    vertical-align: middle !important;
+}
+
+/* Allow dropdowns to overflow table container */
+.table-responsive {
+    overflow: visible !important;
+}
+
+/* Ensure body has min-height for dropdowns and allows overflow */
+div.dataTables_scrollBody {
+    overflow: visible !important;
+    min-height: 300px;
+}
+
+/* Fix static positioning for action column to allow dropdown overflow */
+table.dataTable td.action {
+    position: static !important;
+}
+
+/* ==========================================================================
+   3. TABLE COLUMN WIDTHS
+   ========================================================================== */
+
+#page-enrol-gapplya-manage .col-user {
+    width: 200px;
+}
+
+#page-enrol-gapplya-manage .col-note {
+    width: 150px;
+}
+
+#page-enrol-gapplya-manage .col-schema {
+    max-width: 150px;
+}
+
+#page-enrol-gapplya-manage .col-action {
+    white-space: nowrap;
+}
+
+/* Hide columns initially to prevent FOUC (Flash of Unstyled Content) */
+.dir-rtl #gapplytable.d-none,
+.dir-ltr #gapplytable.d-none {
+    display: none;
+}
+
+/* ==========================================================================
+   4. TOOLBAR ALIGNMENT & CONTROLS
+   ========================================================================== */
+
+/* 4.1. Force consistent height for all toolbar controls */
+.dt-buttons .btn,                  /* Export buttons */
+.dataTables_length .custom-select, /* Records per page dropdown */
+.dataTables_filter .form-control,  /* Search input */
+.action-button,                    /* Bulk action buttons */
+#filters,                          /* Filter toggle button */
+#dropdownMenuButton {              /* Sort dropdown button */
+    height: 38px !important;
+    min-height: 38px !important;
+    line-height: 1.5 !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    vertical-align: middle !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 4.2. Flexbox alignment for DataTables wrappers */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dt-buttons {
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+/* 4.3. Reset line-height/margins for icons inside toolbar buttons */
+.dt-buttons .btn i,
+.action-button i,
+#filters i,
+#dropdownMenuButton i {
+    line-height: 1;
+    margin: 0;
+}
+
+/* 4.4. Fix "Records per page" label alignment */
+.dataTables_length label {
+    margin-bottom: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+/* ==========================================================================
+   5. DROPDOWN MENUS
+   ========================================================================== */
+
+/* Ensure dropdowns appear on top of everything */
+.dropdown-menu {
+    z-index: 9999 !important;
+    margin: 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Reset Global Action Button styles when inside a Dropdown */
+/* This prevents the toolbar flex styles from breaking the dropdown list */
+.dropdown-menu .action-button,
+.dropdown-menu .dropdown-item {
+    height: auto !important;            /* Reset fixed height */
+    min-height: 0 !important;           /* Reset min-height */
+    line-height: 1.5 !important;        /* Standard line-height */
+    padding: 0.25rem 1.5rem !important; /* Bootstrap standard padding */
+    display: block !important;          /* Block display, not flex */
+    width: 100%;                        /* Full width */
+    text-align: left !important;        /* Left align text */
+    justify-content: flex-start !important;
+    box-sizing: border-box;
+    clear: both;
+    font-weight: 400;
+    color: #212529;                     /* Standard text color */
+}
+
+/* Alignment for icons inside dropdown items */
+.dropdown-menu .action-button i,
+.dropdown-menu .dropdown-item i {
+    width: 20px;                        /* Fixed width for icon alignment */
+    text-align: center;
+    margin-right: 0.5rem !important;    /* Spacing between icon and text */
+    margin-left: 0 !important;
+    display: inline-block;
+}
+
+/* Specific styling for the "Delete" button in dropdowns */
+.dropdown-menu .action-button.text-danger {
+    color: #dc3545 !important;
+    text-align: left !important;
+}
+
+/* Hover effects for dropdown items */
+.dropdown-menu .action-button:hover,
+.dropdown-menu .dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #16181b;
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   6. MODALS
+   ========================================================================== */
+
+/* Limit modal width on large screens */
+@media (min-width: 992px) {
+    .modal-dialog {
+        max-width: 800px !important;
+        margin: 1.75rem auto;
+    }
+}
+
+/* ==========================================================================
+   7. UTILITIES & PRINT
+   ========================================================================== */
+
+/* Multi-line text clamping (Truncate text to 3 lines) */
+.text-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    max-width: 350px;
+}
+
+/* Print styles - Hide everything except modal content when open */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .modal-content,
+    .modal-content * {
+        visibility: visible;
+    }
+    .modal-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+    }
+    .d-print-none,
+    .modal-footer {
+        display: none !important;
+    }
+    .modal-backdrop {
+        display: none;
+    }
+}
