@@ -35,7 +35,6 @@ if (!class_exists('enrol_gapplya_admin_setting_migrate')) {
      * Custom admin setting class to handle data migration from the old plugin.
      */
     class enrol_gapplya_admin_setting_migrate extends admin_setting_configcheckbox {
-
         /**
          * Trigger migration logic when the setting is saved and toggled to 1.
          *
@@ -198,7 +197,6 @@ if (!class_exists('enrol_gapplya_admin_setting_migrate')) {
                     $msg .= get_string('migration_deactivated', 'enrol_gapplya', $a);
 
                     \core\notification::add($msg, \core\notification::SUCCESS);
-
                 } catch (\Exception $e) {
                     $errormsg = get_string('migration_error', 'enrol_gapplya', $e->getMessage());
                     \core\notification::add($errormsg, \core\notification::ERROR);
@@ -232,10 +230,31 @@ if ($hassiteconfig) {
             1
         ));
 
+        if (!class_exists('enrol_gapplya_admin_setting_configmultiselect')) {
+            /**
+             * Custom admin setting class to handle cache purging on save.
+             */
+            class enrol_gapplya_admin_setting_configmultiselect extends admin_setting_configmultiselect {
+                /**
+                 * Save a setting and purge caches if successful.
+                 *
+                 * @param string $data
+                 * @return string|bool true if saved, error string otherwise
+                 */
+                public function write_setting($data) {
+                    $result = parent::write_setting($data);
+                    if ($result === true) {
+                        purge_all_caches();
+                    }
+                    return $result;
+                }
+            }
+        }
+
         $fields = enrol_gapplya_get_profile_fields();
         $defaults = ['city', 'institution', 'phone1', 'email'];
 
-        $settings->add(new admin_setting_configmultiselect(
+        $settings->add(new enrol_gapplya_admin_setting_configmultiselect(
             'enrol_gapplya/showuseridentity',
             new lang_string('showuseridentity', 'enrol_gapplya'),
             new lang_string('showuseridentity_desc', 'enrol_gapplya'),
@@ -299,4 +318,3 @@ if ($hassiteconfig) {
         }
     }
 }
-

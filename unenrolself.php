@@ -68,4 +68,3 @@ $message = get_string('withdrawapplicationconfirm', 'enrol_gapplya', format_stri
 
 echo $OUTPUT->confirm($message, $yesurl, $nourl);
 echo $OUTPUT->footer();
-

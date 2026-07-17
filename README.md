@@ -15,7 +15,7 @@ This plugin is a majorly extended and completely refactored version of the origi
 * Data Retention: Choose whether to permanently delete withdrawn applications or keep them as soft-deleted records for historical purposes.
 * Dynamic Datatables: Management tables automatically build search filters and sort options based on the currently visible columns, including your custom form fields.
 
----
+
 
 ## ⚠️ Important: Upgrading from the original "Enrolment Application" (enrol_gapply)
 

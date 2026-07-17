@@ -30,7 +30,6 @@ require_once($CFG->libdir . '/formslib.php');
  * The custom enrolment application form.
  */
 class enrol_gapplya_form extends moodleform {
-
     /**
      * Define the form structure.
      */
@@ -216,4 +215,3 @@ class enrol_gapplya_form extends moodleform {
         return $errors;
     }
 }
-

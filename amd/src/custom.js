@@ -367,7 +367,7 @@ define([
                             rhtml += '<option value="' + rid + '" ' + (rid === roles.defaultrole.toString() ? "selected" : "") + '>' + roles.roles[rid] + '</option>';
                         });
                         roleoptions = rhtml + '</select></div>';
-                        const fmtDate = (ts) => ts ? new Date(ts * 1000).toISOString().slice(0, 16) : "";
+                        const fmtDate = (ts) => (ts && ts != 0 && ts !== "0") ? new Date(ts * 1000).toISOString().slice(0, 16) : "";
                         startdate = '<div class="form-group mt-3"><label>' + M.util.get_string("startdate", "enrol_gapplya") + '</label><input type="datetime-local" class="form-control w-100" id="startdate" value="' + fmtDate(roles.startdate) + '"></div>';
                         enddate = '<div class="form-group mt-3"><label>' + M.util.get_string("enddate", "enrol_gapplya") + '</label><input type="datetime-local" class="form-control w-100" id="enddate" value="' + fmtDate(roles.enddate) + '"></div>';
                     } catch (e) {

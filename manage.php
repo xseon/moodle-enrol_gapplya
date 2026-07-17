@@ -242,7 +242,7 @@ function enrol_gapplya_render_application_table($instance, $DB, $tab) {
 
     foreach ($extrafields as $field) {
         $label = isset($allprofilefields[$field]) ? $allprofilefields[$field] : $field;
-        $html .= '<th class="profilefield colvis inv ' . s($field) . '">' . s($label) . '</th>';
+        $html .= '<th class="profilefield colvis ' . s($field) . '">' . s($label) . '</th>';
     }
 
     // 5. Dynamic JSON Schema Fields
@@ -286,4 +286,3 @@ function enrol_gapplya_render_application_table($instance, $DB, $tab) {
 
     return $html;
 }
-

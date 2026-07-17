@@ -52,7 +52,7 @@ if ($action == 'getuserbyid_history') {
     $mode = 'history';
 }
 
-if ($action == "getuserbyid") {
+if ($action == 'getuserbyid') {
     // 1. Get user details (Modal HTML).
     $useridraw = required_param('userid', PARAM_TEXT);
     if (strpos($useridraw, '_edit') !== false) {
@@ -382,7 +382,7 @@ if ($action == "getuserbyid") {
     echo $html;
     die;
 
-} else if ($action == "getapplications") {
+} else if ($action == 'getapplications') {
     // 2. Get applications for DataTables JSON.
     $tab = required_param('tab', PARAM_TEXT);
     if ($tab === 'all') {
@@ -417,9 +417,24 @@ if ($action == "getuserbyid") {
         }, $records);
 
         $users = [];
+        $userprofiles = [];
         if (!empty($userids)) {
             list($usql, $uparams) = $DB->get_in_or_equal($userids);
             $users = $DB->get_records_select('user', "id $usql", $uparams);
+
+            $sql = "SELECT uid.id, uid.userid, uif.shortname, uid.data
+                    FROM {user_info_data} uid
+                    JOIN {user_info_field} uif ON uid.fieldid = uif.id
+                    WHERE uid.userid $usql";
+            $customdata = $DB->get_records_sql($sql, $uparams);
+            if ($customdata) {
+                foreach ($customdata as $c) {
+                    if (!isset($userprofiles[$c->userid])) {
+                        $userprofiles[$c->userid] = [];
+                    }
+                    $userprofiles[$c->userid][$c->shortname] = $c->data;
+                }
+            }
         }
 
         foreach ($records as $record) {
@@ -431,7 +446,14 @@ if ($action == "getuserbyid") {
                 $user->email = '-';
                 $user->picture = 0;
             } else {
-                profile_load_custom_fields($user);
+                if (!isset($user->profile)) {
+                    $user->profile = [];
+                }
+                if (isset($userprofiles[$user->id])) {
+                    foreach ($userprofiles[$user->id] as $k => $v) {
+                        $user->profile[$k] = $v;
+                    }
+                }
             }
 
             $sm = get_string_manager();
@@ -444,9 +466,14 @@ if ($action == "getuserbyid") {
             $row[] = s($user->middlename ?? '');
             $row[] = s($user->lastname);
 
-            $linkhtml = '<a href="javascript:void(0)" class="showuserdetail font-weight-bold" ' .
-                'data-status="' . $record->status . '" data-statusformatted="' . s($statusstr) . '" ' .
-                'data-id="' . $record->id . '" data-userid="' . $record->userid . '">' . fullname($user) . '</a>';
+            $contextdata = [
+                'status' => $record->status,
+                'statusformatted' => s($statusstr),
+                'id' => $record->id,
+                'userid' => $record->userid,
+                'fullname' => fullname($user),
+            ];
+            $linkhtml = $OUTPUT->render_from_template('enrol_gapplya/user_detail_link', $contextdata);
             $row[] = $linkhtml;
 
             $identityfieldstoshow = array_diff($showuseridentity, ['firstname', 'lastname', 'picture']);
@@ -547,59 +574,15 @@ if ($action == "getuserbyid") {
             $row[] = userdate($record->timecreated);
             $row[] = $record->timecreated;
 
-            $actionbtn = '<div class="dropdown position-static"><button class="btn btn-sm btn-icon ml-auto" ' .
-                'type="button" data-toggle="dropdown" data-bs-toggle="dropdown">' .
-                '<i class="icon fa fa-ellipsis-v fa-fw"></i></button>' .
-                '<div class="dropdown-menu dropdown-menu-right">';
-            $actionbtn .= enrol_gapplya_get_status_buttons($record->status, $record->id, 'dropdown');
-
-            if ($record->status !== 'approved') {
-                $actionbtn .= '<div class="dropdown-divider"></div>';
-            }
-
-            $actionbtn .= html_writer::link(
-                'javascript:void(0)',
-                '<i class="icon fa fa-eye fa-fw text-muted"></i> ' . get_string('view', 'core'),
-                [
-                    'class' => 'dropdown-item showuserdetail',
-                    'data-id' => $record->id,
-                    'data-userid' => $record->userid,
-                    'data-status' => $record->status,
-                    'data-statusformatted' => s($statusstr),
-                ]
-            );
-            $actionbtn .= html_writer::link(
-                'javascript:void(0)',
-                '<i class="icon fa fa-pencil fa-fw text-muted"></i> ' . get_string('edit', 'core'),
-                [
-                    'class' => 'dropdown-item showuserdetail',
-                    'data-id' => $record->id,
-                    'data-userid' => $record->userid . '_edit',
-                    'data-status' => $record->status,
-                    'data-statusformatted' => s($statusstr),
-                ]
-            );
-            $actionbtn .= html_writer::link(
-                'javascript:void(0)',
-                '<i class="icon fa fa-history fa-fw text-muted"></i> ' . get_string('history', 'enrol_gapplya'),
-                [
-                    'class' => 'dropdown-item showuserdetail',
-                    'data-id' => $record->id,
-                    'data-userid' => $record->userid . '_history',
-                    'data-status' => $record->status,
-                    'data-statusformatted' => s($statusstr),
-                ]
-            );
-            $actionbtn .= html_writer::link(
-                'javascript:void(0)',
-                '<i class="icon fa fa-trash fa-fw text-danger"></i> ' . get_string('delete', 'core'),
-                [
-                    'class' => 'dropdown-item menu-action action-button text-danger',
-                    'data-action' => 'delete',
-                    'data-id' => $record->id,
-                ]
-            );
-            $actionbtn .= '</div></div>';
+            $actiondata = [
+                'statusbuttons' => enrol_gapplya_get_status_buttons($record->status, $record->id, 'dropdown'),
+                'isapproved' => ($record->status === 'approved'),
+                'id' => $record->id,
+                'userid' => $record->userid,
+                'status' => $record->status,
+                'statusformatted' => s($statusstr),
+            ];
+            $actionbtn = $OUTPUT->render_from_template('enrol_gapplya/user_action_menu', $actiondata);
 
             $row[] = $actionbtn;
             $row['DT_RowId'] = $record->id;

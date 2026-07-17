@@ -1,0 +1,23 @@
+<div class="dropdown position-static">
+    <button class="btn btn-sm btn-icon ml-auto" type="button" data-toggle="dropdown" data-bs-toggle="dropdown">
+        <i class="icon fa fa-ellipsis-v fa-fw"></i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right">
+        {{{statusbuttons}}}
+        {{^isapproved}}
+            <div class="dropdown-divider"></div>
+        {{/isapproved}}
+        <a href="javascript:void(0)" class="dropdown-item showuserdetail" data-id="{{id}}" data-userid="{{userid}}" data-status="{{status}}" data-statusformatted="{{statusformatted}}">
+            <i class="icon fa fa-eye fa-fw text-muted"></i> {{#str}}view, core{{/str}}
+        </a>
+        <a href="javascript:void(0)" class="dropdown-item showuserdetail" data-id="{{id}}" data-userid="{{userid}}_edit" data-status="{{status}}" data-statusformatted="{{statusformatted}}">
+            <i class="icon fa fa-pencil fa-fw text-muted"></i> {{#str}}edit, core{{/str}}
+        </a>
+        <a href="javascript:void(0)" class="dropdown-item showuserdetail" data-id="{{id}}" data-userid="{{userid}}_history" data-status="{{status}}" data-statusformatted="{{statusformatted}}">
+            <i class="icon fa fa-history fa-fw text-muted"></i> {{#str}}history, enrol_gapplya{{/str}}
+        </a>
+        <a href="javascript:void(0)" class="dropdown-item menu-action action-button text-danger" data-action="delete" data-id="{{id}}">
+            <i class="icon fa fa-trash fa-fw text-danger"></i> {{#str}}delete, core{{/str}}
+        </a>
+    </div>
+</div>

@@ -472,7 +472,11 @@ class enrol_gapplya_plugin extends enrol_plugin {
         $data->customtext3 = is_array($data->customtext3) ? implode(',', $data->customtext3) : $data->customtext3;
         $data->customtext4 = is_array($data->customtext4) ? implode(',', $data->customtext4) : $data->customtext4;
 
-        return parent::update_instance($instance, $data);
+        $result = parent::update_instance($instance, $data);
+        if ($result) {
+            purge_all_caches();
+        }
+        return $result;
     }
 
     /**
@@ -1179,4 +1183,3 @@ function enrol_gapplya_get_profile_fields() {
     asort($allfields);
     return $allfields;
 }
-

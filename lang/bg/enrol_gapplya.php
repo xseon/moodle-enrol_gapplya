@@ -269,4 +269,3 @@ $string['withdrawsuccess'] = 'Заявките бяха оттеглени ус�
 $string['yes'] = 'Да';
 $string['youhavebeenrejected'] = 'Вашата заявка е отхвърлена.';
 $string['youhavebeenwaitlisted'] = 'Вашата заявка е поставена в списъка на чакащите.';
-

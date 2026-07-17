@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-07-17
+
+### Added
+- **Mustache Templates:** Migrated hardcoded HTML strings in the datatable (such as action dropdown menus and user detail links) to Moodle Mustache templates for cleaner presentation logic and easier maintainability.
+
+### Changed
+- **N+1 Database Query Optimization:** Drastically improved the loading speed of the applications datatable by bulk fetching custom user profile fields in a single query, eliminating the N+1 database querying issue.
+- **Cache Automation:** Saving the plugin settings now automatically triggers localized cache purges, removing the need for administrators to manually purge caches after updating custom JSON schemas or profile field settings.
+
+### Fixed
+- **Enrolment Duration:** Fixed an issue where the default enrolment duration (start and end dates) were incorrectly defaulting to the year 1970 when left unchecked. Unchecked dates now properly result in unlimited enrolment duration.
+- **PHPCS Compliance:** Refactored code to meet strict Moodle PHP coding standards and passed prechecker validations.
+- **Datatable Columns:** Fixed an issue where the configured user profile fields were incorrectly hidden by default in the applications management datatable.
+
+## [1.1.1] - 2026-04-21
+
+### Fixed
+- **CSS Leaking Issue:** Fixed a visual bug where the plugin's stylesheet unintentionally affected global Moodle UI elements (such as the user management filters and standard modals). All custom CSS rules in `styles.css` are now strictly scoped to the plugin's pages using the `.path-enrol-gapplya` class.
+
 ## [1.1.0] - 2026-03-17
 
 ### Added

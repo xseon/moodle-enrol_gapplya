@@ -269,4 +269,3 @@ $string['withdrawsuccess'] = 'Requests have been successfully withdrawn.';
 $string['yes'] = 'Yes';
 $string['youhavebeenrejected'] = 'Your application has been rejected.';
 $string['youhavebeenwaitlisted'] = 'Your application has been placed on the waitlist.';
-

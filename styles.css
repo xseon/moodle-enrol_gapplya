@@ -18,16 +18,15 @@
  * @copyright  2026 Dimitar Mitev <info@napravisisait.com>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 /* ==========================================================================
    1. PAGE LAYOUT & TABS
    ========================================================================== */
 
-/* Push the last tab (Edit/Settings) to the far right */
 #page-enrol-gapplya-manage #page-content .nav-tabs .nav-item:nth-last-child(1) {
     margin-left: auto;
 }
 
-/* Ensure the link color in the last tab remains black */
 #page-enrol-gapplya-manage #page-content .nav-tabs .nav-item:nth-last-child(1) a {
     color: #000;
 }
@@ -36,36 +35,30 @@
    2. DATATABLES CORE OVERRIDES
    ========================================================================== */
 
-/* Fix alignment of checkbox selection indicators */
 #page-enrol-gapplya-manage table.dataTable > tbody > tr.selected > td.select-checkbox:after,
-table.dataTable > tbody > tr.selected > th.select-checkbox:after {
+#page-enrol-gapplya-manage table.dataTable > tbody > tr.selected > th.select-checkbox:after {
     margin-top: -16px;
 }
 
-/* Ensure action buttons has equal width and inside table text is white */
 #page-enrol-gapplya-manage .btn.action-button {
     color: #fff;
 }
 
-/* Vertical alignment for table cells */
 #page-enrol-gapplya-manage table.dataTable tbody td,
 #page-enrol-gapplya-manage table.dataTable tbody th {
     vertical-align: middle !important;
 }
 
-/* Allow dropdowns to overflow table container */
-.table-responsive {
+.path-enrol-gapplya .table-responsive {
     overflow: visible !important;
 }
 
-/* Ensure body has min-height for dropdowns and allows overflow */
-div.dataTables_scrollBody {
+.path-enrol-gapplya div.dataTables_scrollBody {
     overflow: visible !important;
     min-height: 300px;
 }
 
-/* Fix static positioning for action column to allow dropdown overflow */
-table.dataTable td.action {
+.path-enrol-gapplya table.dataTable td.action {
     position: static !important;
 }
 
@@ -73,23 +66,11 @@ table.dataTable td.action {
    3. TABLE COLUMN WIDTHS
    ========================================================================== */
 
-#page-enrol-gapplya-manage .col-user {
-    width: 200px;
-}
+#page-enrol-gapplya-manage .col-user { width: 200px; }
+#page-enrol-gapplya-manage .col-note { width: 150px; }
+#page-enrol-gapplya-manage .col-schema { max-width: 150px; }
+#page-enrol-gapplya-manage .col-action { white-space: nowrap; }
 
-#page-enrol-gapplya-manage .col-note {
-    width: 150px;
-}
-
-#page-enrol-gapplya-manage .col-schema {
-    max-width: 150px;
-}
-
-#page-enrol-gapplya-manage .col-action {
-    white-space: nowrap;
-}
-
-/* Hide columns initially to prevent FOUC (Flash of Unstyled Content) */
 .dir-rtl #gapplytable.d-none,
 .dir-ltr #gapplytable.d-none {
     display: none;
@@ -99,13 +80,12 @@ table.dataTable td.action {
    4. TOOLBAR ALIGNMENT & CONTROLS
    ========================================================================== */
 
-/* 4.1. Force consistent height for all toolbar controls */
-.dt-buttons .btn,                  /* Export buttons */
-.dataTables_length .custom-select, /* Records per page dropdown */
-.dataTables_filter .form-control,  /* Search input */
-.action-button,                    /* Bulk action buttons */
-#filters,                          /* Filter toggle button */
-#dropdownMenuButton {              /* Sort dropdown button */
+.path-enrol-gapplya .dt-buttons .btn,
+.path-enrol-gapplya .dataTables_length .custom-select,
+.path-enrol-gapplya .dataTables_filter .form-control,
+.path-enrol-gapplya .action-button,
+.path-enrol-gapplya #filters,
+.path-enrol-gapplya #dropdownMenuButton {
     height: 38px !important;
     min-height: 38px !important;
     line-height: 1.5 !important;
@@ -118,26 +98,23 @@ table.dataTable td.action {
     justify-content: center;
 }
 
-/* 4.2. Flexbox alignment for DataTables wrappers */
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter,
-.dataTables_wrapper .dt-buttons {
+.path-enrol-gapplya .dataTables_wrapper .dataTables_length,
+.path-enrol-gapplya .dataTables_wrapper .dataTables_filter,
+.path-enrol-gapplya .dataTables_wrapper .dt-buttons {
     display: flex;
     align-items: center;
     vertical-align: middle;
 }
 
-/* 4.3. Reset line-height/margins for icons inside toolbar buttons */
-.dt-buttons .btn i,
-.action-button i,
-#filters i,
-#dropdownMenuButton i {
+.path-enrol-gapplya .dt-buttons .btn i,
+.path-enrol-gapplya .action-button i,
+.path-enrol-gapplya #filters i,
+.path-enrol-gapplya #dropdownMenuButton i {
     line-height: 1;
     margin: 0;
 }
 
-/* 4.4. Fix "Records per page" label alignment */
-.dataTables_length label {
+.path-enrol-gapplya .dataTables_length label {
     margin-bottom: 0 !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -147,50 +124,44 @@ table.dataTable td.action {
    5. DROPDOWN MENUS
    ========================================================================== */
 
-/* Ensure dropdowns appear on top of everything */
-.dropdown-menu {
+.path-enrol-gapplya .dropdown-menu {
     z-index: 9999 !important;
     margin: 0;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-/* Reset Global Action Button styles when inside a Dropdown */
-/* This prevents the toolbar flex styles from breaking the dropdown list */
-.dropdown-menu .action-button,
-.dropdown-menu .dropdown-item {
-    height: auto !important;            /* Reset fixed height */
-    min-height: 0 !important;           /* Reset min-height */
-    line-height: 1.5 !important;        /* Standard line-height */
-    padding: 0.25rem 1.5rem !important; /* Bootstrap standard padding */
-    display: block !important;          /* Block display, not flex */
-    width: 100%;                        /* Full width */
-    text-align: left !important;        /* Left align text */
+.path-enrol-gapplya .dropdown-menu .action-button,
+.path-enrol-gapplya .dropdown-menu .dropdown-item {
+    height: auto !important;
+    min-height: 0 !important;
+    line-height: 1.5 !important;
+    padding: 0.25rem 1.5rem !important;
+    display: block !important;
+    width: 100%;
+    text-align: left !important;
     justify-content: flex-start !important;
     box-sizing: border-box;
     clear: both;
     font-weight: 400;
-    color: #212529;                     /* Standard text color */
+    color: #212529;
 }
 
-/* Alignment for icons inside dropdown items */
-.dropdown-menu .action-button i,
-.dropdown-menu .dropdown-item i {
-    width: 20px;                        /* Fixed width for icon alignment */
+.path-enrol-gapplya .dropdown-menu .action-button i,
+.path-enrol-gapplya .dropdown-menu .dropdown-item i {
+    width: 20px;
     text-align: center;
-    margin-right: 0.5rem !important;    /* Spacing between icon and text */
+    margin-right: 0.5rem !important;
     margin-left: 0 !important;
     display: inline-block;
 }
 
-/* Specific styling for the "Delete" button in dropdowns */
-.dropdown-menu .action-button.text-danger {
+.path-enrol-gapplya .dropdown-menu .action-button.text-danger {
     color: #dc3545 !important;
     text-align: left !important;
 }
 
-/* Hover effects for dropdown items */
-.dropdown-menu .action-button:hover,
-.dropdown-menu .dropdown-item:hover {
+.path-enrol-gapplya .dropdown-menu .action-button:hover,
+.path-enrol-gapplya .dropdown-menu .dropdown-item:hover {
     background-color: #f8f9fa;
     color: #16181b;
     text-decoration: none;
@@ -200,9 +171,8 @@ table.dataTable td.action {
    6. MODALS
    ========================================================================== */
 
-/* Limit modal width on large screens */
 @media (min-width: 992px) {
-    .modal-dialog {
+    .path-enrol-gapplya .modal-dialog {
         max-width: 800px !important;
         margin: 1.75rem auto;
     }
@@ -212,8 +182,7 @@ table.dataTable td.action {
    7. UTILITIES & PRINT
    ========================================================================== */
 
-/* Multi-line text clamping (Truncate text to 3 lines) */
-.text-clamp-3 {
+.path-enrol-gapplya .text-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -223,16 +192,15 @@ table.dataTable td.action {
     max-width: 350px;
 }
 
-/* Print styles - Hide everything except modal content when open */
 @media print {
-    body * {
+    .path-enrol-gapplya * {
         visibility: hidden;
     }
-    .modal-content,
-    .modal-content * {
+    .path-enrol-gapplya .modal-content,
+    .path-enrol-gapplya .modal-content * {
         visibility: visible;
     }
-    .modal-content {
+    .path-enrol-gapplya .modal-content {
         position: absolute;
         left: 0;
         top: 0;
@@ -240,12 +208,11 @@ table.dataTable td.action {
         border: none;
         box-shadow: none;
     }
-    .d-print-none,
-    .modal-footer {
+    .path-enrol-gapplya .d-print-none,
+    .path-enrol-gapplya .modal-footer {
         display: none !important;
     }
-    .modal-backdrop {
+    .path-enrol-gapplya .modal-backdrop {
         display: none;
     }
 }
-
