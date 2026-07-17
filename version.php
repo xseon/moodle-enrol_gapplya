@@ -29,4 +29,4 @@ $plugin->version   = 2026071701; // The current plugin version (Date: YYYYMMDDXX
 $plugin->release   = '1.2.0';    // Human-readable version name (History Update).
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->requires  = 2022112800; // Requires Moodle 4.1 or later.
-$plugin->supported = [401, 501]; // Supported Moodle versions.
+$plugin->supported = [401, 502]; // Supported Moodle versions.
