@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - **Web Services Compatibility:** Removed unused external web service declarations (`enrol_gapplya_get_applications` and `enrol_gapplya_get_user_details`) from `db/services.php` that caused a fatal `coding_exception: Missing implementation method` when accessing `/admin/webservice/testclient.php`.
 
+### Added
+- **Moodle 5.3 Compatibility:** Officially verified and declared compatibility for Moodle 5.3 (`[401, 503]`).
+
 ## [1.2.0] - 2026-07-17
 
 ### Added
