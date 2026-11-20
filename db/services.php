@@ -49,22 +49,6 @@ $functions = [
         'ajax'          => true,
         'loginrequired' => true,
     ],
-    'enrol_gapplya_get_user_details' => [
-        'classname'     => 'enrol_gapplya\external\api',
-        'methodname'    => 'get_user_details',
-        'description'   => 'Get user application details HTML',
-        'type'          => 'read',
-        'ajax'          => true,
-        'loginrequired' => true,
-    ],
-    'enrol_gapplya_get_applications' => [
-        'classname'     => 'enrol_gapplya\external\api',
-        'methodname'    => 'get_applications',
-        'description'   => 'Get applications JSON for datatable',
-        'type'          => 'read',
-        'ajax'          => true,
-        'loginrequired' => true,
-    ],
     'enrol_gapplya_get_groups' => [
         'classname'     => 'enrol_gapplya\external\api',
         'methodname'    => 'get_groups',

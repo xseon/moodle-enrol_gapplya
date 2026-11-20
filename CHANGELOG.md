@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-11-20
+
+### Fixed
+- **Web Services Compatibility:** Removed unused external web service declarations (`enrol_gapplya_get_applications` and `enrol_gapplya_get_user_details`) from `db/services.php` that caused a fatal `coding_exception: Missing implementation method` when accessing `/admin/webservice/testclient.php`.
+
 ## [1.2.0] - 2026-07-17
 
 ### Added
